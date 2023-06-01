@@ -9,8 +9,8 @@ const crc16Table = [0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70
 function crc16(buffer) {
   let checksum = 0;
 
-  for (const byte of buffer) {
-    [checksum] = new Uint16Array([crc16Table[(checksum >> 8 ^ byte) & 0xFF] ^ checksum << 8]);
+  for (let byte of buffer) {
+    [checksum] = new Uint16Array([crc16Table[(checksum >> 8 ^ byte) & 0xff] ^ checksum << 8]);
   }
 
   return checksum;
@@ -49,7 +49,7 @@ class VescBuffer {
 
   slice(expected) {
     if (this.index + expected <= this.buffer.length) {
-      const value = this.buffer.slice(this.index, this.index + expected - 1);
+      let value = this.buffer.slice(this.index, this.index + expected - 1);
       this.index += expected - 1;
       return value;
     }
@@ -58,37 +58,37 @@ class VescBuffer {
   }
 
   readUInt8() {
-    const value = this.buffer.readUInt8(this.index);
+    let value = this.buffer.readUInt8(this.index);
     this.index += 1;
     return value;
   }
 
   readUInt16() {
-    const value = this.buffer.readUInt16BE(this.index);
+    let value = this.buffer.readUInt16BE(this.index);
     this.index += 2;
     return value;
   }
 
   readUInt32() {
-    const value = this.buffer.readUInt32BE(this.index);
+    let value = this.buffer.readUInt32BE(this.index);
     this.index += 4;
     return value;
   }
 
   readInt8() {
-    const value = this.buffer.readInt8(this.index);
+    let value = this.buffer.readInt8(this.index);
     this.index += 1;
     return value;
   }
 
   readInt16() {
-    const value = this.buffer.readInt16BE(this.index);
+    let value = this.buffer.readInt16BE(this.index);
     this.index += 2;
     return value;
   }
 
   readInt32() {
-    const value = this.buffer.readInt32BE(this.index);
+    let value = this.buffer.readInt32BE(this.index);
     this.index += 4;
     return value;
   }
@@ -1244,9 +1244,9 @@ class VescMessageHandler {
     this.packetStartFound = false;
     this.packetState = 0;
     this.vescMessages.subscribe(message => {
-      const data = Buffer.concat([this.buffer, message]);
+      let data = Buffer.concat([this.buffer, message]);
 
-      for (const [i, byte] of data.entries()) {
+      for (let [i, byte] of data.entries()) {
         if (this.packetStartFound) {
           switch (this.packetState) {
             case PACKET_HEADER:
@@ -1346,7 +1346,7 @@ class VescMessageHandler {
 
 }
 
-var PacketTypes = {
+const PacketTypes = {
   COMM_FW_VERSION: 0,
   COMM_JUMP_TO_BOOTLOADER: 1,
   COMM_ERASE_NEW_APP: 2,
@@ -1385,27 +1385,150 @@ var PacketTypes = {
   COMM_SET_CHUCK_DATA: 35,
   COMM_CUSTOM_APP_DATA: 36,
   COMM_NRF_START_PAIRING: 37,
-  COMM_GET_IMU_DATA: 79
+  COMM_GPD_SET_FSW: 38,
+  COMM_GPD_BUFFER_NOTIFY: 39,
+  COMM_GPD_BUFFER_SIZE_LEFT: 40,
+  COMM_GPD_FILL_BUFFER: 41,
+  COMM_GPD_OUTPUT_SAMPLE: 42,
+  COMM_GPD_SET_MODE: 43,
+  COMM_GPD_FILL_BUFFER_INT8: 44,
+  COMM_GPD_FILL_BUFFER_INT16: 45,
+  COMM_GPD_SET_BUFFER_INT_SCALE: 46,
+  COMM_GET_VALUES_SETUP: 47,
+  COMM_SET_MCCONF_TEMP: 48,
+  COMM_SET_MCCONF_TEMP_SETUP: 49,
+  COMM_GET_VALUES_SELECTIVE: 50,
+  COMM_GET_VALUES_SETUP_SELECTIVE: 51,
+  COMM_EXT_NRF_PRESENT: 52,
+  COMM_EXT_NRF_ESB_SET_CH_ADDR: 53,
+  COMM_EXT_NRF_ESB_SEND_DATA: 54,
+  COMM_EXT_NRF_ESB_RX_DATA: 55,
+  COMM_EXT_NRF_SET_ENABLED: 56,
+  COMM_DETECT_MOTOR_FLUX_LINKAGE_OPENLOOP: 57,
+  COMM_DETECT_APPLY_ALL_FOC: 58,
+  COMM_JUMP_TO_BOOTLOADER_ALL_CAN: 59,
+  COMM_ERASE_NEW_APP_ALL_CAN: 60,
+  COMM_WRITE_NEW_APP_DATA_ALL_CAN: 61,
+  COMM_PING_CAN: 62,
+  COMM_APP_DISABLE_OUTPUT: 63,
+  COMM_TERMINAL_CMD_SYNC: 64,
+  COMM_GET_IMU_DATA: 65,
+  COMM_BM_CONNECT: 66,
+  COMM_BM_ERASE_FLASH_ALL: 67,
+  COMM_BM_WRITE_FLASH: 68,
+  COMM_BM_REBOOT: 69,
+  COMM_BM_DISCONNECT: 70,
+  COMM_BM_MAP_PINS_DEFAULT: 71,
+  COMM_BM_MAP_PINS_NRF5X: 72,
+  COMM_ERASE_BOOTLOADER: 73,
+  COMM_ERASE_BOOTLOADER_ALL_CAN: 74,
+  COMM_PLOT_INIT: 75,
+  COMM_PLOT_DATA: 76,
+  COMM_PLOT_ADD_GRAPH: 77,
+  COMM_PLOT_SET_GRAPH: 78,
+  COMM_GET_DECODED_BALANCE: 79,
+  COMM_BM_MEM_READ: 80,
+  COMM_WRITE_NEW_APP_DATA_LZO: 81,
+  COMM_WRITE_NEW_APP_DATA_ALL_CAN_LZO: 82,
+  COMM_BM_WRITE_FLASH_LZO: 83,
+  COMM_SET_CURRENT_REL: 84,
+  COMM_CAN_FWD_FRAME: 85,
+  COMM_SET_BATTERY_CUT: 86,
+  COMM_SET_BLE_NAME: 87,
+  COMM_SET_BLE_PIN: 88,
+  COMM_SET_CAN_MODE: 89,
+  COMM_GET_IMU_CALIBRATION: 90,
+  COMM_GET_MCCONF_TEMP: 100,
+  // Custom configuration for hardware
+  COMM_GET_CUSTOM_CONFIG_XML: 101,
+  COMM_GET_CUSTOM_CONFIG: 102,
+  COMM_GET_CUSTOM_CONFIG_DEFAULT: 103,
+  COMM_SET_CUSTOM_CONFIG: 104,
+  // BMS commands
+  COMM_BMS_GET_VALUES: 105,
+  COMM_BMS_SET_CHARGE_ALLOWED: 106,
+  COMM_BMS_SET_BALANCE_OVERRIDE: 107,
+  COMM_BMS_RESET_COUNTERS: 108,
+  COMM_BMS_FORCE_BALANCE: 109,
+  COMM_BMS_ZERO_CURRENT_OFFSET: 110,
+  // FW updates commands for different HW types
+  COMM_JUMP_TO_BOOTLOADER_HW: 111,
+  COMM_ERASE_NEW_APP_HW: 112,
+  COMM_WRITE_NEW_APP_DATA_HW: 113,
+  COMM_ERASE_BOOTLOADER_HW: 114,
+  COMM_JUMP_TO_BOOTLOADER_ALL_CAN_HW: 115,
+  COMM_ERASE_NEW_APP_ALL_CAN_HW: 116,
+  COMM_WRITE_NEW_APP_DATA_ALL_CAN_HW: 117,
+  COMM_ERASE_BOOTLOADER_ALL_CAN_HW: 118,
+  COMM_SET_ODOMETER: 119
 };
+const PackerTypeToString = {
+  0: 'COMM_FW_VERSION',
+  1: 'COMM_JUMP_TO_BOOTLOADER',
+  2: 'COMM_ERASE_NEW_APP',
+  3: 'COMM_WRITE_NEW_APP_DATA',
+  4: 'COMM_GET_VALUES',
+  5: 'COMM_SET_DUTY',
+  6: 'COMM_SET_CURRENT',
+  7: 'COMM_SET_CURRENT_BRAKE',
+  8: 'COMM_SET_RPM',
+  9: 'COMM_SET_POS',
+  10: 'COMM_SET_HANDBRAKE',
+  11: 'COMM_SET_DETECT',
+  12: 'COMM_SET_SERVO_POS',
+  13: 'COMM_SET_MCCONF',
+  14: 'COMM_GET_MCCONF',
+  15: 'COMM_GET_MCCONF_DEFAULT',
+  16: 'COMM_SET_APPCONF',
+  17: 'COMM_GET_APPCONF',
+  18: 'COMM_GET_APPCONF_DEFAULT',
+  19: 'COMM_SAMPLE_PRINT',
+  20: 'COMM_TERMINAL_CMD',
+  21: 'COMM_PRINT',
+  22: 'COMM_ROTOR_POSITION',
+  23: 'COMM_EXPERIMENT_SAMPLE',
+  24: 'COMM_DETECT_MOTOR_PARAM',
+  25: 'COMM_DETECT_MOTOR_R_L',
+  26: 'COMM_DETECT_MOTOR_FLUX_LINKAGE',
+  27: 'COMM_DETECT_ENCODER',
+  28: 'COMM_DETECT_HALL_FOC',
+  29: 'COMM_REBOOT',
+  30: 'COMM_ALIVE',
+  31: 'COMM_GET_DECODED_PPM',
+  32: 'COMM_GET_DECODED_ADC',
+  33: 'COMM_GET_DECODED_CHUK',
+  34: 'COMM_FORWARD_CAN',
+  35: 'COMM_SET_CHUCK_DATA',
+  36: 'COMM_CUSTOM_APP_DATA',
+  37: 'COMM_NRF_START_PAIRING',
+  50: 'COMM_GET_VALUES_SELECTIVE',
+  51: 'COMM_GET_VALUES_SETUP_SELECTIVE',
+  52: 'COMM_EXT_NRF_PRESENT',
+  53: 'COMM_EXT_NRF_ESB_SET_CH_ADDR',
+  54: 'COMM_EXT_NRF_ESB_SEND_DATA',
+  55: 'COMM_EXT_NRF_ESB_RX_DATA',
+  56: 'COMM_EXT_NRF_SET_ENABLED',
+  57: 'COMM_DETECT_MOTOR_FLUX_LINKAGE_OPENLOOP',
+  58: 'COMM_DETECT_APPLY_ALL_FOC'
+};
+const NotRequiredResponsePacket = [PacketTypes.COMM_JUMP_TO_BOOTLOADER, PacketTypes.COMM_SET_DUTY, PacketTypes.COMM_SET_CURRENT, PacketTypes.COMM_SET_CURRENT_BRAKE, PacketTypes.COMM_SET_RPM, PacketTypes.COMM_SET_POS, PacketTypes.COMM_SET_HANDBRAKE, PacketTypes.COMM_SET_DETECT, PacketTypes.COMM_SET_SERVO_POS, PacketTypes.COMM_REBOOT, PacketTypes.COMM_ALIVE, PacketTypes.COMM_FORWARD_CAN, PacketTypes.COMM_SET_CHUCK_DATA, PacketTypes.COMM_CUSTOM_APP_DATA];
 
 /**
  * @param {Buffer} buffer
  */
-function bufferToArray(buffer) {
-  return [...buffer].map(byte => byte.toString(16)).map(byte => {
-    if (byte.length < 2) {
-      return `0${byte}`;
-    }
+const bufferToArray = buffer => [...buffer].map(byte => byte.toString(16)).map(byte => {
+  if (byte.length < 2) {
+    return `0${byte}`;
+  }
 
-    return byte;
-  });
-}
+  return byte;
+});
 /**
  * @param {VescBuffer} payload
  */
 
 function getFWVersion(payload) {
-  const response = {
+  let response = {
     version: {
       major: -1,
       minor: -1
@@ -1428,7 +1551,7 @@ function getFWVersion(payload) {
  */
 
 function getValues(payload) {
-  const response = {
+  let response = {
     temp: {
       mosfet: 0.0,
       motor: 0.0
@@ -1463,7 +1586,7 @@ function getValues(payload) {
   response.id = payload.readDouble32(1e2);
   response.iq = payload.readDouble32(1e2);
   response.dutyCycle = payload.readDouble16(1e3);
-  response.erpm = payload.readDouble32(1e0);
+  response.erpm = payload.readDouble32(1);
   response.voltage = payload.readDouble16(1e1);
   response.ampHours.consumed = payload.readDouble32(1e4);
   response.ampHours.charged = payload.readDouble32(1e4);
@@ -1479,7 +1602,7 @@ function getValues(payload) {
  */
 
 function getDecodedPPM(payload) {
-  const response = {
+  let response = {
     decodedPPM: 0.0,
     ppmLastLen: 0.0
   };
@@ -1491,8 +1614,121 @@ function getDecodedPPM(payload) {
  * @param {VescBuffer} payload
  */
 
+function getValuesSetupSelective(payload) {
+  /* eslint no-bitwise: ["error", { "allow": ["&", "<<"] }] */
+  let response = {
+    bitmask: 0,
+    temp: {
+      mosfet: 0.0,
+      motor: 0.0
+    },
+    current: {
+      in: 0.0,
+      in_total: 0.0
+    },
+    dutyCycle: 0.0,
+    erpm: 0.0,
+    speed: 0.0,
+    voltage: 0.0,
+    batteryLevel: 0.0,
+    ampHours: {
+      consumed: 0.0,
+      charged: 0.0
+    },
+    wattHours: {
+      consumed: 0.0,
+      charged: 0.0
+    },
+    tachometer: {
+      value: 0.0,
+      abs: 0.0
+    },
+    pidPos: 0.0,
+    faultCode: 0,
+    controllerId: 0,
+    numVescs: 0,
+    wattHoursLeft: 0.0,
+    odoMeter: 0.0
+  };
+  response.bitmask = payload.readDouble32(1);
+  let mask = response.bitmask;
+
+  if (mask & 1 << 0) {
+    response.temp.mosfet = payload.readDouble16(1e1);
+  }
+
+  if (mask & 1 << 1) {
+    response.temp.motor = payload.readDouble16(1e1);
+  }
+
+  if (mask & 1 << 2) {
+    response.current.in = payload.readDouble32(1e2);
+  }
+
+  if (mask & 1 << 3) {
+    response.current.in_total = payload.readDouble32(1e2);
+  }
+
+  if (mask & 1 << 4) {
+    response.dutyCycle = payload.readDouble16(1e3);
+  }
+
+  if (mask & 1 << 5) {
+    response.erpm = payload.readDouble32(1);
+  }
+
+  if (mask & 1 << 6) {
+    response.speed = payload.readDouble32(1e3);
+  }
+
+  if (mask & 1 << 7) {
+    response.voltage = payload.readDouble16(1e1);
+  }
+
+  if (mask & 1 << 8) {
+    response.batteryLevel = payload.readDouble16(1e3);
+  }
+
+  if (mask & 1 << 9) {
+    response.ampHours.consumed = payload.readDouble32(1e4);
+  }
+
+  if (mask & 1 << 10) {
+    response.ampHours.charged = payload.readDouble32(1e4);
+  }
+
+  if (mask & 1 << 11) {
+    response.wattHours.consumed = payload.readDouble32(1e4);
+  }
+
+  if (mask & 1 << 12) {
+    response.wattHours.charged = payload.readDouble32(1e4);
+  }
+
+  if (mask & 1 << 13) {
+    response.tachometer.value = payload.readInt32();
+  }
+
+  if (mask & 1 << 14) {
+    response.tachometer.abs = payload.readInt32();
+  }
+
+  if (mask & 1 << 15) {
+    response.pidPos = payload.readDouble32(1e6);
+  }
+
+  if (mask & 1 << 16) {
+    response.faultCode = payload.readInt8();
+  }
+
+  return Promise.resolve(response);
+}
+/**
+ * @param {VescBuffer} payload
+ */
+
 function getMotorConfiguration(payload) {
-  const response = {
+  let response = {
     message: 'yeah',
     payload
   };
@@ -1503,7 +1739,7 @@ function getMotorConfiguration(payload) {
  */
 
 function getAppConfiguration(payload) {
-  const response = {
+  let response = {
     signature: 0,
     controller_id: 0,
     timeout_msec: 0.0,
@@ -1565,7 +1801,7 @@ function getAppConfiguration(payload) {
   response.signature = payload.readInt32();
   response.controller_id = payload.readInt8();
   response.timeout_msec = payload.readInt32();
-  response.timeout_brake_current = payload.readDouble32(1e0);
+  response.timeout_brake_current = payload.readDouble32(1);
   response.send_can_status = payload.readInt8();
   response.send_can_status_rate_hz = payload.readUInt16();
   response.can_baud_rate = payload.readInt8();
@@ -1617,8 +1853,8 @@ class VescMessageParser extends Subject {
     super();
     this.vescMessages = new Subject();
     this.vescMessages.subscribe(message => {
-      const buffer = new VescBuffer(message.payload);
-      const packetType = Object.keys(PacketTypes)[message.type];
+      let buffer = new VescBuffer(message.payload);
+      let packetType = Object.keys(PacketTypes)[message.type];
       logger.debug(`Received PacketType: "${packetType}"`);
 
       switch (message.type) {
@@ -1636,6 +1872,10 @@ class VescMessageParser extends Subject {
 
         case PacketTypes.COMM_GET_VALUES:
           getValues(buffer).then(result => this.pushResult(packetType, result));
+          break;
+
+        case PacketTypes.COMM_GET_VALUES_SETUP_SELECTIVE:
+          getValuesSetupSelective(buffer).then(result => this.pushResult(packetType, result));
           break;
 
         case PacketTypes.COMM_GET_DECODED_PPM:
@@ -1685,7 +1925,7 @@ function generatePacket(payload) {
     index += 1;
     buffer.writeUInt8(payload.length >> 8, index);
     index += 1;
-    buffer.writeUInt8(payload.length & 0xFF, index);
+    buffer.writeUInt8(payload.length & 0xff, index);
     index += 1;
   }
 
@@ -1693,96 +1933,14 @@ function generatePacket(payload) {
     buffer.writeUInt8(payload[i], index);
   }
 
-  const crc = crc16(payload);
+  let crc = crc16(payload);
   buffer.writeUInt8(crc >> 8, index);
   index += 1;
-  buffer.writeUInt8(crc & 0xFF, index);
+  buffer.writeUInt8(crc & 0xff, index);
   index += 1;
   buffer.writeUInt8(3, index);
   return buffer;
 }
 
-const packetTypes = {
-  COMM_FW_VERSION: 0,
-  COMM_JUMP_TO_BOOTLOADER: 1,
-  COMM_ERASE_NEW_APP: 2,
-  COMM_WRITE_NEW_APP_DATA: 3,
-  COMM_GET_VALUES: 4,
-  COMM_SET_DUTY: 5,
-  COMM_SET_CURRENT: 6,
-  COMM_SET_CURRENT_BRAKE: 7,
-  COMM_SET_RPM: 8,
-  COMM_SET_POS: 9,
-  COMM_SET_HANDBRAKE: 10,
-  COMM_SET_DETECT: 11,
-  COMM_SET_SERVO_POS: 12,
-  COMM_SET_MCCONF: 13,
-  COMM_GET_MCCONF: 14,
-  COMM_GET_MCCONF_DEFAULT: 15,
-  COMM_SET_APPCONF: 16,
-  COMM_GET_APPCONF: 17,
-  COMM_GET_APPCONF_DEFAULT: 18,
-  COMM_SAMPLE_PRINT: 19,
-  COMM_TERMINAL_CMD: 20,
-  COMM_PRINT: 21,
-  COMM_ROTOR_POSITION: 22,
-  COMM_EXPERIMENT_SAMPLE: 23,
-  COMM_DETECT_MOTOR_PARAM: 24,
-  COMM_DETECT_MOTOR_R_L: 25,
-  COMM_DETECT_MOTOR_FLUX_LINKAGE: 26,
-  COMM_DETECT_ENCODER: 27,
-  COMM_DETECT_HALL_FOC: 28,
-  COMM_REBOOT: 29,
-  COMM_ALIVE: 30,
-  COMM_GET_DECODED_PPM: 31,
-  COMM_GET_DECODED_ADC: 32,
-  COMM_GET_DECODED_CHUK: 33,
-  COMM_FORWARD_CAN: 34,
-  COMM_SET_CHUCK_DATA: 35,
-  COMM_CUSTOM_APP_DATA: 36,
-  COMM_NRF_START_PAIRING: 37
-};
-const packerTypeToString = {
-  0: 'COMM_FW_VERSION',
-  1: 'COMM_JUMP_TO_BOOTLOADER',
-  2: 'COMM_ERASE_NEW_APP',
-  3: 'COMM_WRITE_NEW_APP_DATA',
-  4: 'COMM_GET_VALUES',
-  5: 'COMM_SET_DUTY',
-  6: 'COMM_SET_CURRENT',
-  7: 'COMM_SET_CURRENT_BRAKE',
-  8: 'COMM_SET_RPM',
-  9: 'COMM_SET_POS',
-  10: 'COMM_SET_HANDBRAKE',
-  11: 'COMM_SET_DETECT',
-  12: 'COMM_SET_SERVO_POS',
-  13: 'COMM_SET_MCCONF',
-  14: 'COMM_GET_MCCONF',
-  15: 'COMM_GET_MCCONF_DEFAULT',
-  16: 'COMM_SET_APPCONF',
-  17: 'COMM_GET_APPCONF',
-  18: 'COMM_GET_APPCONF_DEFAULT',
-  19: 'COMM_SAMPLE_PRINT',
-  20: 'COMM_TERMINAL_CMD',
-  21: 'COMM_PRINT',
-  22: 'COMM_ROTOR_POSITION',
-  23: 'COMM_EXPERIMENT_SAMPLE',
-  24: 'COMM_DETECT_MOTOR_PARAM',
-  25: 'COMM_DETECT_MOTOR_R_L',
-  26: 'COMM_DETECT_MOTOR_FLUX_LINKAGE',
-  27: 'COMM_DETECT_ENCODER',
-  28: 'COMM_DETECT_HALL_FOC',
-  29: 'COMM_REBOOT',
-  30: 'COMM_ALIVE',
-  31: 'COMM_GET_DECODED_PPM',
-  32: 'COMM_GET_DECODED_ADC',
-  33: 'COMM_GET_DECODED_CHUK',
-  34: 'COMM_FORWARD_CAN',
-  35: 'COMM_SET_CHUCK_DATA',
-  36: 'COMM_CUSTOM_APP_DATA',
-  37: 'COMM_NRF_START_PAIRING'
-};
-const notRequiredResponsePacket = [packetTypes.COMM_JUMP_TO_BOOTLOADER, packetTypes.COMM_SET_DUTY, packetTypes.COMM_SET_CURRENT, packetTypes.COMM_SET_CURRENT_BRAKE, packetTypes.COMM_SET_RPM, packetTypes.COMM_SET_POS, packetTypes.COMM_SET_HANDBRAKE, packetTypes.COMM_SET_DETECT, packetTypes.COMM_SET_SERVO_POS, packetTypes.COMM_REBOOT, packetTypes.COMM_ALIVE, packetTypes.COMM_FORWARD_CAN, packetTypes.COMM_SET_CHUCK_DATA, packetTypes.COMM_CUSTOM_APP_DATA];
-
-export { VescBuffer, VescMessageHandler, VescMessageParser, crc16, generatePacket, notRequiredResponsePacket, packerTypeToString, packetTypes };
+export { NotRequiredResponsePacket, PackerTypeToString, PacketTypes, VescBuffer, VescMessageHandler, VescMessageParser, crc16, generatePacket };
 //# sourceMappingURL=index.js.map
