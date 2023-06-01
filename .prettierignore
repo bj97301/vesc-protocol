@@ -1,0 +1,6 @@
+# Ignore artifacts:
+node_modules
+package-lock.json
+yarn.lock
+dist
+src/vesc-messages.js

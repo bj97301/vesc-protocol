@@ -1,9 +1,5 @@
 {
-  "presets": [
-    [
-      "@babel/env"
-    ]
-  ],
+  "presets": [["@babel/env"]],
   "env": {
     "rollup": {
       "presets": [

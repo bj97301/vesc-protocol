@@ -1,11 +1,11 @@
-import crc16 from './crc16';
-import VescBuffer from './vescBuffer';
+import crc16 from './crc16'
+import VescBuffer from './vescBuffer'
 // import VescPacketParser from './vescPacketParser';
 // import VescProtocolParser from './vescProtocolParser';
-import VescMessageHandler from './vescMessageHandler';
-import VescMessageParser from './vescMessageParser';
-import generatePacket from './vescMessageGenerator';
-import { PacketTypes, PackerTypeToString, NotRequiredResponsePacket } from './packetType';
+import VescMessageHandler from './vescMessageHandler'
+import VescMessageParser from './vescMessageParser'
+import generatePacket from './vescMessageGenerator'
+import {PacketTypes, PackerTypeToString, NotRequiredResponsePacket} from './packetType'
 
 export {
   PacketTypes,
@@ -18,4 +18,4 @@ export {
   VescMessageHandler,
   VescMessageParser,
   generatePacket,
-};
+}

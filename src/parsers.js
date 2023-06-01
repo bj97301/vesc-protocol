@@ -1,44 +1,45 @@
 /**
  * @param {Buffer} buffer
  */
-export function bufferToArray(buffer) {
-  return [...buffer].map((byte) => byte.toString(16)).map((byte) => {
-    if (byte.length < 2) {
-      return `0${byte}`;
-    }
+export const bufferToArray = buffer =>
+  [...buffer]
+    .map(byte => byte.toString(16))
+    .map(byte => {
+      if (byte.length < 2) {
+        return `0${byte}`
+      }
 
-    return byte;
-  });
-}
+      return byte
+    })
 
 /**
  * @param {VescBuffer} payload
  */
 export function getFWVersion(payload) {
-  const response = {
+  let response = {
     version: {
       major: -1,
       minor: -1,
     },
     hardware: 'UNKNOWN',
     uuid: null,
-  };
-
-  if (payload.size() >= 2) {
-    response.version.major = payload.readUInt8();
-    response.version.minor = payload.readUInt8();
-    response.hardware = payload.readString();
-    response.uuid = bufferToArray(payload.slice(12));
   }
 
-  return Promise.resolve(response);
+  if (payload.size() >= 2) {
+    response.version.major = payload.readUInt8()
+    response.version.minor = payload.readUInt8()
+    response.hardware = payload.readString()
+    response.uuid = bufferToArray(payload.slice(12))
+  }
+
+  return Promise.resolve(response)
 }
 
 /**
  * @param {VescBuffer} payload
  */
 export function getValues(payload) {
-  const response = {
+  let response = {
     temp: {
       mosfet: 0.0,
       motor: 0.0,
@@ -65,152 +66,152 @@ export function getValues(payload) {
       abs: 0.0,
     },
     faultCode: 0,
-  };
+  }
 
-  response.temp.mosfet = payload.readDouble16(1e1);
-  response.temp.motor = payload.readDouble16(1e1);
-  response.current.motor = payload.readDouble32(1e2);
-  response.current.battery = payload.readDouble32(1e2);
-  response.id = payload.readDouble32(1e2);
-  response.iq = payload.readDouble32(1e2);
-  response.dutyCycle = payload.readDouble16(1e3);
-  response.erpm = payload.readDouble32(1e0);
-  response.voltage = payload.readDouble16(1e1);
-  response.ampHours.consumed = payload.readDouble32(1e4);
-  response.ampHours.charged = payload.readDouble32(1e4);
-  response.wattHours.consumed = payload.readDouble32(1e4);
-  response.wattHours.charged = payload.readDouble32(1e4);
-  response.tachometer.value = payload.readInt32();
-  response.tachometer.abs = payload.readInt32();
-  response.faultCode = payload.readInt8();
+  response.temp.mosfet = payload.readDouble16(1e1)
+  response.temp.motor = payload.readDouble16(1e1)
+  response.current.motor = payload.readDouble32(1e2)
+  response.current.battery = payload.readDouble32(1e2)
+  response.id = payload.readDouble32(1e2)
+  response.iq = payload.readDouble32(1e2)
+  response.dutyCycle = payload.readDouble16(1e3)
+  response.erpm = payload.readDouble32(1)
+  response.voltage = payload.readDouble16(1e1)
+  response.ampHours.consumed = payload.readDouble32(1e4)
+  response.ampHours.charged = payload.readDouble32(1e4)
+  response.wattHours.consumed = payload.readDouble32(1e4)
+  response.wattHours.charged = payload.readDouble32(1e4)
+  response.tachometer.value = payload.readInt32()
+  response.tachometer.abs = payload.readInt32()
+  response.faultCode = payload.readInt8()
 
-  return Promise.resolve(response);
+  return Promise.resolve(response)
 }
 
 /**
  * @param {VescBuffer} payload
  */
 export function getDecodedPPM(payload) {
-  const response = {
+  let response = {
     decodedPPM: 0.0,
     ppmLastLen: 0.0,
-  };
+  }
 
-  response.decodedPPM = payload.readDouble32(1e6);
-  response.ppmLastLen = payload.readDouble32(1e6);
+  response.decodedPPM = payload.readDouble32(1e6)
+  response.ppmLastLen = payload.readDouble32(1e6)
 
-  return Promise.resolve(response);
+  return Promise.resolve(response)
 }
 
 /**
  * @param {VescBuffer} payload
  */
 export function getDecodedADC(payload) {
-  const response = {
+  let response = {
     level1: 0.0,
     voltage1: 0.0,
     level2: 0.0,
     voltage2: 0.0,
-  };
+  }
 
-  response.level1 = payload.readDouble32(1e6);
-  response.voltage1 = payload.readDouble32(1e6);
-  response.level2 = payload.readDouble32(1e6);
-  response.voltage2 = payload.readDouble32(1e6);
+  response.level1 = payload.readDouble32(1e6)
+  response.voltage1 = payload.readDouble32(1e6)
+  response.level2 = payload.readDouble32(1e6)
+  response.voltage2 = payload.readDouble32(1e6)
 
-  return Promise.resolve(response);
+  return Promise.resolve(response)
 }
 
 /**
  * @param {VescBuffer} payload
  */
 export function getStatus1(payload) {
-  const response = {
+  let response = {
     erpm: 0.0,
     dutyCycle: 0.0,
     current: 0.0,
-  };
+  }
 
-  response.erpm = payload.readInt32();
-  response.current = payload.readDouble16(1e1);
-  response.dutyCycle = payload.readUInt16();
-  return Promise.resolve(response);
+  response.erpm = payload.readInt32()
+  response.current = payload.readDouble16(1e1)
+  response.dutyCycle = payload.readUInt16()
+  return Promise.resolve(response)
 }
 
 /**
  * @param {VescBuffer} payload
  */
 export function getStatus2(payload) {
-  const response = {
+  let response = {
     ampHours: {
       consumed: 0.0,
       charged: 0.0,
     },
-  };
+  }
 
-  response.ampHours.consumed = payload.readDouble32(1e4);
-  response.ampHours.charged = payload.readDouble32(1e4);
-  return Promise.resolve(response);
+  response.ampHours.consumed = payload.readDouble32(1e4)
+  response.ampHours.charged = payload.readDouble32(1e4)
+  return Promise.resolve(response)
 }
 
 /**
  * @param {VescBuffer} payload
  */
 export function getStatus3(payload) {
-  const response = {
+  let response = {
     wattHours: {
       consumed: 0.0,
       charged: 0.0,
     },
-  };
+  }
 
-  response.wattHours.consumed = payload.readDouble32(1e4);
-  response.wattHours.charged = payload.readDouble32(1e4);
-  return Promise.resolve(response);
+  response.wattHours.consumed = payload.readDouble32(1e4)
+  response.wattHours.charged = payload.readDouble32(1e4)
+  return Promise.resolve(response)
 }
 
 /**
  * @param {VescBuffer} payload
  */
 export function getStatus4(payload) {
-  const response = {
+  let response = {
     temp: {
       mosfet: 0.0,
       motor: 0.0,
     },
     totalCurrentIn: 0.0,
     pidPosition: 0.0,
-  };
+  }
 
-  response.temp.mosfet = payload.readDouble16(1e1);
-  response.temp.motor = payload.readDouble16(1e1);
-  response.totalCurrentIn = payload.readDouble16(1e1);
-  response.pidPosition = payload.readDouble16(5e1);
-  return Promise.resolve(response);
+  response.temp.mosfet = payload.readDouble16(1e1)
+  response.temp.motor = payload.readDouble16(1e1)
+  response.totalCurrentIn = payload.readDouble16(1e1)
+  response.pidPosition = payload.readDouble16(5e1)
+  return Promise.resolve(response)
 }
 
 /**
  * @param {VescBuffer} payload
  */
 export function getStatus5(payload) {
-  const response = {
+  let response = {
     tachometer: {
       value: 0.0,
     },
     voltage: 0.0,
-  };
+  }
 
-  response.tachometer.value = payload.readDouble32(1e0);
-  response.voltage = payload.readDouble16(1e1);
-  return Promise.resolve(response);
+  response.tachometer.value = payload.readDouble32(1)
+  response.voltage = payload.readDouble16(1e1)
+  return Promise.resolve(response)
 }
 
 /**
  * @param {VescBuffer} payload
  */
 export function getValuesSetupSelective(payload) {
-/* eslint no-bitwise: ["error", { "allow": ["&", "<<"] }] */
-  const response = {
+  /* eslint no-bitwise: ["error", { "allow": ["&", "<<"] }] */
+  let response = {
     bitmask: 0,
     temp: {
       mosfet: 0.0,
@@ -243,69 +244,69 @@ export function getValuesSetupSelective(payload) {
     numVescs: 0,
     wattHoursLeft: 0.0,
     odoMeter: 0.0,
-  };
+  }
 
-  response.bitmask = payload.readDouble32(1e0);
-  const mask = response.bitmask;
+  response.bitmask = payload.readDouble32(1)
+  let mask = response.bitmask
   if (mask & (1 << 0)) {
-    response.temp.mosfet = payload.readDouble16(1e1);
+    response.temp.mosfet = payload.readDouble16(1e1)
   }
   if (mask & (1 << 1)) {
-    response.temp.motor = payload.readDouble16(1e1);
+    response.temp.motor = payload.readDouble16(1e1)
   }
   if (mask & (1 << 2)) {
-    response.current.in = payload.readDouble32(1e2);
+    response.current.in = payload.readDouble32(1e2)
   }
   if (mask & (1 << 3)) {
-    response.current.in_total = payload.readDouble32(1e2);
+    response.current.in_total = payload.readDouble32(1e2)
   }
   if (mask & (1 << 4)) {
-    response.dutyCycle = payload.readDouble16(1e3);
+    response.dutyCycle = payload.readDouble16(1e3)
   }
   if (mask & (1 << 5)) {
-    response.erpm = payload.readDouble32(1e0);
+    response.erpm = payload.readDouble32(1)
   }
   if (mask & (1 << 6)) {
-    response.speed = payload.readDouble32(1e3);
+    response.speed = payload.readDouble32(1e3)
   }
   if (mask & (1 << 7)) {
-    response.voltage = payload.readDouble16(1e1);
+    response.voltage = payload.readDouble16(1e1)
   }
   if (mask & (1 << 8)) {
-    response.batteryLevel = payload.readDouble16(1e3);
+    response.batteryLevel = payload.readDouble16(1e3)
   }
   if (mask & (1 << 9)) {
-    response.ampHours.consumed = payload.readDouble32(1e4);
+    response.ampHours.consumed = payload.readDouble32(1e4)
   }
   if (mask & (1 << 10)) {
-    response.ampHours.charged = payload.readDouble32(1e4);
+    response.ampHours.charged = payload.readDouble32(1e4)
   }
   if (mask & (1 << 11)) {
-    response.wattHours.consumed = payload.readDouble32(1e4);
+    response.wattHours.consumed = payload.readDouble32(1e4)
   }
   if (mask & (1 << 12)) {
-    response.wattHours.charged = payload.readDouble32(1e4);
+    response.wattHours.charged = payload.readDouble32(1e4)
   }
   if (mask & (1 << 13)) {
-    response.tachometer.value = payload.readInt32();
+    response.tachometer.value = payload.readInt32()
   }
   if (mask & (1 << 14)) {
-    response.tachometer.abs = payload.readInt32();
+    response.tachometer.abs = payload.readInt32()
   }
   if (mask & (1 << 15)) {
-    response.pidPos = payload.readDouble32(1e6);
+    response.pidPos = payload.readDouble32(1e6)
   }
   if (mask & (1 << 16)) {
-    response.faultCode = payload.readInt8();
+    response.faultCode = payload.readInt8()
   }
-  return Promise.resolve(response);
+  return Promise.resolve(response)
 }
 
 /**
  * @param {VescBuffer} payload
  */
 export function getBalanceData(payload) {
-  const response = {
+  let response = {
     pid: 0.0,
     pitch: 0.0,
     roll: 0.0,
@@ -316,27 +317,27 @@ export function getBalanceData(payload) {
     switchState: 0.0,
     adc1: 0.0,
     adc2: 0.0,
-  };
+  }
 
-  response.pidOutput = payload.readDouble32(1e6);
-  response.pitch = payload.readDouble32(1e6);
-  response.roll = payload.readDouble32(1e6);
-  response.loopTime = payload.readDouble32(1e0);
-  response.motorCurrent = payload.readDouble32(1e6);
-  response.motorPosition = payload.readDouble32(1e6);
-  response.balanceState = payload.readUInt16();
-  response.switchState = payload.readUInt16();
-  response.adc1 = payload.readDouble32(1e6);
-  response.adc2 = payload.readDouble32(1e6);
+  response.pidOutput = payload.readDouble32(1e6)
+  response.pitch = payload.readDouble32(1e6)
+  response.roll = payload.readDouble32(1e6)
+  response.loopTime = payload.readDouble32(1)
+  response.motorCurrent = payload.readDouble32(1e6)
+  response.motorPosition = payload.readDouble32(1e6)
+  response.balanceState = payload.readUInt16()
+  response.switchState = payload.readUInt16()
+  response.adc1 = payload.readDouble32(1e6)
+  response.adc2 = payload.readDouble32(1e6)
 
-  return Promise.resolve(response);
+  return Promise.resolve(response)
 }
 
 /**
  * @param {VescBuffer} payload
  */
 export function getBmsValues(payload) {
-  const response = {
+  let response = {
     v_tot: 0.0,
     v_charge: 0.0,
     i_in: 0.0,
@@ -354,54 +355,54 @@ export function getBmsValues(payload) {
     temp_max_cell: 0.0,
     soc: 0.0,
     soh: 0.0,
-  };
+  }
 
-  response.v_tot = payload.readDouble32(1e6);
-  response.v_charge = payload.readDouble32(1e6);
-  response.i_in = payload.readDouble32(1e6);
-  response.i_in_ic = payload.readDouble32(1e6);
-  response.ah_cnt = payload.readDouble32(1e3);
-  response.wh_cnt = payload.readDouble32(1e3);
-  response.cell_num = payload.readInt8();
+  response.v_tot = payload.readDouble32(1e6)
+  response.v_charge = payload.readDouble32(1e6)
+  response.i_in = payload.readDouble32(1e6)
+  response.i_in_ic = payload.readDouble32(1e6)
+  response.ah_cnt = payload.readDouble32(1e3)
+  response.wh_cnt = payload.readDouble32(1e3)
+  response.cell_num = payload.readInt8()
   for (let i = 0; i < response.cell_num; i += 1) {
-    const cellVoltage = payload.readDouble16(1e3);
-    response.v_cell.push(cellVoltage);
+    let cellVoltage = payload.readDouble16(1e3)
+    response.v_cell.push(cellVoltage)
   }
   for (let i = 0; i < response.cell_num; i += 1) {
-    const cellBalanceState = payload.readDouble16(1e3);
-    response.bal_states.push(cellBalanceState);
+    let cellBalanceState = payload.readDouble16(1e3)
+    response.bal_states.push(cellBalanceState)
   }
-  response.temp_adc_num = payload.readInt8();
+  response.temp_adc_num = payload.readInt8()
   for (let i = 0; i < response.temp_adc_num; i += 1) {
-    const temp = payload.readDouble16(1e2);
-    response.temps_adc.push(temp);
+    let temp = payload.readDouble16(1e2)
+    response.temps_adc.push(temp)
   }
-  response.temp_ic = payload.readDouble16(1e2);
-  response.temp_hum = payload.readDouble16(1e2);
-  response.hum = payload.readDouble16(1e2);
-  response.temp_max_cell = payload.readDouble16(1e2);
-  response.soc = payload.readDouble16(1e3);
-  response.soh = payload.readDouble16(1e3);
-  return Promise.resolve(response);
+  response.temp_ic = payload.readDouble16(1e2)
+  response.temp_hum = payload.readDouble16(1e2)
+  response.hum = payload.readDouble16(1e2)
+  response.temp_max_cell = payload.readDouble16(1e2)
+  response.soc = payload.readDouble16(1e3)
+  response.soh = payload.readDouble16(1e3)
+  return Promise.resolve(response)
 }
 
 /**
  * @param {VescBuffer} payload
  */
 export function getMotorConfiguration(payload) {
-  const response = {
+  let response = {
     message: 'yeah',
     payload,
-  };
+  }
 
-  return Promise.resolve(response);
+  return Promise.resolve(response)
 }
 
 /**
  * @param {VescBuffer} payload
  */
 export function getAppConfiguration(payload) {
-  const response = {
+  let response = {
     signature: 0,
     controller_id: 0,
     timeout_msec: 0.0,
@@ -459,57 +460,57 @@ export function getAppConfiguration(payload) {
     app_balance_conf: {},
     app_pas_conf: {},
     imu_conf: {},
-  };
+  }
 
-  response.signature = payload.readInt32();
-  response.controller_id = payload.readInt8();
-  response.timeout_msec = payload.readInt32();
-  response.timeout_brake_current = payload.readDouble32(1e0);
-  response.send_can_status = payload.readInt8();
-  response.send_can_status_rate_hz = payload.readUInt16();
-  response.can_baud_rate = payload.readInt8();
-  response.pairing_done = payload.readInt8();
-  response.permanent_uart_enabled = payload.readInt8();
-  response.shutdown_mode = payload.readInt8();
-  response.can_mode = payload.readInt8();
-  response.uavcan_esc_index = payload.readInt8();
-  response.uavcan_raw_mode = payload.readInt8();
-  response.app_to_use = payload.readInt8();
-  response.app_ppm_conf.ctrl_type = payload.readInt8();
-  response.app_ppm_conf.pid_max_erpm = payload.readDouble32(1e2);
-  response.app_ppm_conf.hyst = payload.readDouble32(1e4);
-  response.app_ppm_conf.pulse_start = payload.readDouble32(1e4);
-  response.app_ppm_conf.pulse_end = payload.readDouble32(1e4);
-  response.app_ppm_conf.pulse_center = payload.readDouble32(1e4);
-  response.app_ppm_conf.median_filter = payload.readInt8();
-  response.app_ppm_conf.safe_start = payload.readInt8();
-  response.app_ppm_conf.throttle_exp = payload.readDouble32();
-  response.app_ppm_conf.throttle_exp_brake = payload.readDouble32();
-  response.app_ppm_conf.throttle_exp_mode = payload.readInt8();
-  response.app_ppm_conf.ramp_time_pos = payload.readDouble32();
-  response.app_ppm_conf.ramp_time_neg = payload.readDouble32();
-  response.app_ppm_conf.multi_esc = payload.readInt8();
-  response.app_ppm_conf.tc = payload.readInt8();
-  response.app_ppm_conf.tc_max_diff = payload.readDouble32();
-  response.app_ppm_conf.max_erpm_for_dir = payload.readDouble32();
-  response.app_ppm_conf.smart_rev_max_duty = payload.readDouble32();
-  response.app_ppm_conf.smart_rev_ramp_time = payload.readDouble32();
-  response.app_adc_conf.hyst = payload.readDouble32();
-  response.app_adc_conf.voltage_start = payload.readDouble32();
-  response.app_adc_conf.voltage_end = payload.readDouble32();
-  response.app_adc_conf.voltage_center = payload.readDouble32();
-  response.app_adc_conf.voltage2_start = payload.readDouble32();
-  response.app_adc_conf.voltage2_end = payload.readDouble32();
-  response.app_adc_conf.use_filter = payload.readInt8();
-  response.app_adc_conf.safe_start = payload.readInt8();
-  response.app_adc_conf.cc_button_inverted = payload.readInt8();
-  response.app_adc_conf.rev_button_inverted = payload.readInt8();
-  response.app_adc_conf.voltage_inverted = payload.readInt8();
-  response.app_adc_conf.voltage2_inverted = payload.readInt8();
-  response.app_adc_conf.throttle_exp = payload.readDouble32();
-  response.app_adc_conf.throttle_exp_brake = payload.readDouble32();
+  response.signature = payload.readInt32()
+  response.controller_id = payload.readInt8()
+  response.timeout_msec = payload.readInt32()
+  response.timeout_brake_current = payload.readDouble32(1)
+  response.send_can_status = payload.readInt8()
+  response.send_can_status_rate_hz = payload.readUInt16()
+  response.can_baud_rate = payload.readInt8()
+  response.pairing_done = payload.readInt8()
+  response.permanent_uart_enabled = payload.readInt8()
+  response.shutdown_mode = payload.readInt8()
+  response.can_mode = payload.readInt8()
+  response.uavcan_esc_index = payload.readInt8()
+  response.uavcan_raw_mode = payload.readInt8()
+  response.app_to_use = payload.readInt8()
+  response.app_ppm_conf.ctrl_type = payload.readInt8()
+  response.app_ppm_conf.pid_max_erpm = payload.readDouble32(1e2)
+  response.app_ppm_conf.hyst = payload.readDouble32(1e4)
+  response.app_ppm_conf.pulse_start = payload.readDouble32(1e4)
+  response.app_ppm_conf.pulse_end = payload.readDouble32(1e4)
+  response.app_ppm_conf.pulse_center = payload.readDouble32(1e4)
+  response.app_ppm_conf.median_filter = payload.readInt8()
+  response.app_ppm_conf.safe_start = payload.readInt8()
+  response.app_ppm_conf.throttle_exp = payload.readDouble32()
+  response.app_ppm_conf.throttle_exp_brake = payload.readDouble32()
+  response.app_ppm_conf.throttle_exp_mode = payload.readInt8()
+  response.app_ppm_conf.ramp_time_pos = payload.readDouble32()
+  response.app_ppm_conf.ramp_time_neg = payload.readDouble32()
+  response.app_ppm_conf.multi_esc = payload.readInt8()
+  response.app_ppm_conf.tc = payload.readInt8()
+  response.app_ppm_conf.tc_max_diff = payload.readDouble32()
+  response.app_ppm_conf.max_erpm_for_dir = payload.readDouble32()
+  response.app_ppm_conf.smart_rev_max_duty = payload.readDouble32()
+  response.app_ppm_conf.smart_rev_ramp_time = payload.readDouble32()
+  response.app_adc_conf.hyst = payload.readDouble32()
+  response.app_adc_conf.voltage_start = payload.readDouble32()
+  response.app_adc_conf.voltage_end = payload.readDouble32()
+  response.app_adc_conf.voltage_center = payload.readDouble32()
+  response.app_adc_conf.voltage2_start = payload.readDouble32()
+  response.app_adc_conf.voltage2_end = payload.readDouble32()
+  response.app_adc_conf.use_filter = payload.readInt8()
+  response.app_adc_conf.safe_start = payload.readInt8()
+  response.app_adc_conf.cc_button_inverted = payload.readInt8()
+  response.app_adc_conf.rev_button_inverted = payload.readInt8()
+  response.app_adc_conf.voltage_inverted = payload.readInt8()
+  response.app_adc_conf.voltage2_inverted = payload.readInt8()
+  response.app_adc_conf.throttle_exp = payload.readDouble32()
+  response.app_adc_conf.throttle_exp_brake = payload.readDouble32()
 
-  return Promise.resolve(response);
+  return Promise.resolve(response)
 }
 
 /* eslint-disable no-eval */

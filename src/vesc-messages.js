@@ -1,3 +1,8 @@
+// eslint-disable-file
+// prettier-ignore
+// format: off
+// @ts-nocheck
+// @ts-ignore
 export const MESSAGE_FW_VERSION = {
   START: Buffer.from(new Uint8Array([
     2, // short package
@@ -17,7 +22,7 @@ export const MESSAGE_FW_VERSION = {
     222, 50, // CRC
     3, // package end
   ])),
-};
+}
 
 export const MESSAGE_FW_VERSION_WRONG_CRC = {
   START: MESSAGE_FW_VERSION.START,
@@ -28,7 +33,7 @@ export const MESSAGE_FW_VERSION_WRONG_CRC = {
     222, 0, // CRC
     3, // package end
   ])),
-};
+}
 
 export const MESSAGE_FW_VERSION_WRONG_END = {
   START: MESSAGE_FW_VERSION.START,
@@ -39,7 +44,7 @@ export const MESSAGE_FW_VERSION_WRONG_END = {
     222, 50, // CRC
     1, // package end
   ])),
-};
+}
 
 export const MESSAGE_GET_VALUES = {
   PACKAGE: Buffer.from(new Uint8Array([
@@ -60,14 +65,14 @@ export const MESSAGE_GET_VALUES = {
     118, 48, 46, 57, // tachometer.abs
     3, // faultCode
   ])),
-};
+}
 
 export const MESSAGE_GET_DECODED_PPM = {
   PACKAGE: Buffer.from(new Uint8Array([
     5, 2, 67, 104, // decodedPPM
     101, 97, 112, 32, // ppmLastLen
   ])),
-};
+}
 
 export const MESSAGE_GET_DECODED_ADC = {
   PACKAGE: Buffer.from(new Uint8Array([
@@ -76,7 +81,7 @@ export const MESSAGE_GET_DECODED_ADC = {
     0, 2, 67, 104, // level2
     0, 48, 112, 32, // voltage2
   ])),
-};
+}
 
 export const MESSAGE_STATUS_1 = {
   PACKAGE: Buffer.from(new Uint8Array([
@@ -84,21 +89,21 @@ export const MESSAGE_STATUS_1 = {
     0, 55, // current
     0, 77, // dutyCycle
   ])),
-};
+}
 
 export const MESSAGE_STATUS_2 = {
   PACKAGE: Buffer.from(new Uint8Array([
     0, 3, 0, 2, // ampHours.consumed
     0, 1, 5, 0, // ampHours.consumed
   ])),
-};
+}
 
 export const MESSAGE_STATUS_3 = {
   PACKAGE: Buffer.from(new Uint8Array([
     0, 3, 0, 2, // wattHours.consumed
     0, 1, 5, 0, // wattHours.charged
   ])),
-};
+}
 
 export const MESSAGE_STATUS_4 = {
   PACKAGE: Buffer.from(new Uint8Array([
@@ -107,14 +112,14 @@ export const MESSAGE_STATUS_4 = {
     0, 101, // totalCurrentIn
     0, 50, // pidPosition
   ])),
-};
+}
 
 export const MESSAGE_STATUS_5 = {
   PACKAGE: Buffer.from(new Uint8Array([
     0, 0, 0, 10, // tachometer.value
     1, 197, 0, 0, // voltage
   ])),
-};
+}
 
 export const MESSAGE_GET_VALUES_SETUP_SELECTIVE = {
   PACKAGE: Buffer.from(new Uint8Array([
@@ -142,7 +147,7 @@ export const MESSAGE_GET_VALUES_SETUP_SELECTIVE = {
     1, 167, // mosfet
     1, 56, // motor
   ])),
-};
+}
 
 export const MESSAGE_COMM_GET_IMU_DATA = {
   PACKAGE: Buffer.from(new Uint8Array([
@@ -157,7 +162,7 @@ export const MESSAGE_COMM_GET_IMU_DATA = {
     0, 0, 0, 0, // adc1
     0, 0, 0, 0, // adc2
   ])),
-};
+}
 
 export const MESSAGE_COMM_BMS_GET_VALUES = {
   PACKAGE: Buffer.from(new Uint8Array([
@@ -202,7 +207,7 @@ export const MESSAGE_COMM_BMS_GET_VALUES = {
     0, 0, // soc
     0, 0, // soh
   ])),
-};
+}
 
 export const MESSAGE_COMM_GET_APPCONF = {
   START: Buffer.from(new Uint8Array([
@@ -277,12 +282,10 @@ export const MESSAGE_COMM_GET_APPCONF = {
     0, 0, 0, 0, 0, 0, 0, 0, 64, 160, 0, 0, 128, 65, 3,
   ])),
   END: Buffer.from(new Uint8Array([])),
-};
-
-export function generateMessage(type) {
-  return Buffer.concat([
-    type.START,
-    type.PACKAGE,
-    type.END,
-  ]);
 }
+
+export const generateMessage = (type) => Buffer.concat([
+  type.START,
+  type.PACKAGE,
+  type.END,
+])

@@ -117,7 +117,7 @@ const PacketTypes = {
   COMM_ERASE_BOOTLOADER_ALL_CAN_HW: 118,
 
   COMM_SET_ODOMETER: 119,
-};
+}
 
 const PackerTypeToString = {
   0: 'COMM_FW_VERSION',
@@ -160,7 +160,14 @@ const PackerTypeToString = {
   37: 'COMM_NRF_START_PAIRING',
   50: 'COMM_GET_VALUES_SELECTIVE',
   51: 'COMM_GET_VALUES_SETUP_SELECTIVE',
-};
+  52: 'COMM_EXT_NRF_PRESENT',
+  53: 'COMM_EXT_NRF_ESB_SET_CH_ADDR',
+  54: 'COMM_EXT_NRF_ESB_SEND_DATA',
+  55: 'COMM_EXT_NRF_ESB_RX_DATA',
+  56: 'COMM_EXT_NRF_SET_ENABLED',
+  57: 'COMM_DETECT_MOTOR_FLUX_LINKAGE_OPENLOOP',
+  58: 'COMM_DETECT_APPLY_ALL_FOC',
+}
 
 const NotRequiredResponsePacket = [
   PacketTypes.COMM_JUMP_TO_BOOTLOADER,
@@ -177,10 +184,6 @@ const NotRequiredResponsePacket = [
   PacketTypes.COMM_FORWARD_CAN,
   PacketTypes.COMM_SET_CHUCK_DATA,
   PacketTypes.COMM_CUSTOM_APP_DATA,
-];
+]
 
-export {
-  PacketTypes,
-  PackerTypeToString,
-  NotRequiredResponsePacket,
-};
+export {PacketTypes, PackerTypeToString, NotRequiredResponsePacket}
