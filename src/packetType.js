@@ -184,6 +184,7 @@ const NotRequiredResponsePacket = [
   PacketTypes.COMM_FORWARD_CAN,
   PacketTypes.COMM_SET_CHUCK_DATA,
   PacketTypes.COMM_CUSTOM_APP_DATA,
+  PacketTypes.COMM_DETECT_APPLY_ALL_FOC,
 ]
 
 export {PacketTypes, PackerTypeToString, NotRequiredResponsePacket}
