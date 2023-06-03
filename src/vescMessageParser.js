@@ -48,6 +48,7 @@ export default class VescMessageParser extends Subject {
 
         default:
           logger.debug(`Unknown packet type "${message.type}"`)
+          getMotorConfiguration(buffer).then(result => this.pushResult(packetType, result))
       }
     })
   }
