@@ -1734,119 +1734,6 @@ function getMotorConfiguration(payload) {
   };
   return Promise.resolve(response);
 }
-/**
- * @param {VescBuffer} payload
- */
-
-function getAppConfiguration(payload) {
-  let response = {
-    signature: 0,
-    controller_id: 0,
-    timeout_msec: 0.0,
-    timeout_brake_current: 0.0,
-    send_can_status: 0,
-    send_can_status_rate_hz: 0,
-    can_baud_rate: 0,
-    pairing_done: 0,
-    permanent_uart_enabled: 0,
-    shutdown_mode: 0,
-    can_mode: 0,
-    uavcan_esc_index: 0,
-    uavcan_raw_mode: 0,
-    app_to_use: 0,
-    app_ppm_conf: {
-      ctrl_type: 0,
-      pid_max_erpm: 0.0,
-      hyst: 0.0,
-      pulse_start: 0.0,
-      pulse_end: 0.0,
-      pulse_center: 0.0,
-      median_filter: 0,
-      safe_start: 0,
-      throttle_exp: 0.0,
-      throttle_exp_brake: 0.0,
-      throttle_exp_mode: 0,
-      ramp_time_pos: 0.0,
-      ramp_time_neg: 0.0,
-      multi_esc: 0,
-      tc: 0,
-      tc_max_diff: 0.0,
-      max_erpm_for_dir: 0.0,
-      smart_rev_max_duty: 0.0,
-      smart_rev_ramp_time: 0.0
-    },
-    app_adc_conf: {
-      ctrl_type: 0,
-      hyst: 0.0,
-      voltage_start: 0.0,
-      voltage_end: 0.0,
-      voltage_center: 0.0,
-      voltage2_start: 0.0,
-      voltage2_end: 0.0,
-      use_filter: 0,
-      safe_start: 0,
-      cc_button_inverted: 0,
-      rev_button_inverted: 0,
-      voltage_inverted: 0,
-      voltage2_inverted: 0,
-      throttle_exp: 0.0,
-      throttle_exp_brake: 0.0
-    },
-    app_chuk_conf: {},
-    app_nrf_conf: {},
-    app_balance_conf: {},
-    app_pas_conf: {},
-    imu_conf: {}
-  };
-  response.signature = payload.readInt32();
-  response.controller_id = payload.readInt8();
-  response.timeout_msec = payload.readInt32();
-  response.timeout_brake_current = payload.readDouble32(1);
-  response.send_can_status = payload.readInt8();
-  response.send_can_status_rate_hz = payload.readUInt16();
-  response.can_baud_rate = payload.readInt8();
-  response.pairing_done = payload.readInt8();
-  response.permanent_uart_enabled = payload.readInt8();
-  response.shutdown_mode = payload.readInt8();
-  response.can_mode = payload.readInt8();
-  response.uavcan_esc_index = payload.readInt8();
-  response.uavcan_raw_mode = payload.readInt8();
-  response.app_to_use = payload.readInt8();
-  response.app_ppm_conf.ctrl_type = payload.readInt8();
-  response.app_ppm_conf.pid_max_erpm = payload.readDouble32(1e2);
-  response.app_ppm_conf.hyst = payload.readDouble32(1e4);
-  response.app_ppm_conf.pulse_start = payload.readDouble32(1e4);
-  response.app_ppm_conf.pulse_end = payload.readDouble32(1e4);
-  response.app_ppm_conf.pulse_center = payload.readDouble32(1e4);
-  response.app_ppm_conf.median_filter = payload.readInt8();
-  response.app_ppm_conf.safe_start = payload.readInt8();
-  response.app_ppm_conf.throttle_exp = payload.readDouble32();
-  response.app_ppm_conf.throttle_exp_brake = payload.readDouble32();
-  response.app_ppm_conf.throttle_exp_mode = payload.readInt8();
-  response.app_ppm_conf.ramp_time_pos = payload.readDouble32();
-  response.app_ppm_conf.ramp_time_neg = payload.readDouble32();
-  response.app_ppm_conf.multi_esc = payload.readInt8();
-  response.app_ppm_conf.tc = payload.readInt8();
-  response.app_ppm_conf.tc_max_diff = payload.readDouble32();
-  response.app_ppm_conf.max_erpm_for_dir = payload.readDouble32();
-  response.app_ppm_conf.smart_rev_max_duty = payload.readDouble32();
-  response.app_ppm_conf.smart_rev_ramp_time = payload.readDouble32();
-  response.app_adc_conf.hyst = payload.readDouble32();
-  response.app_adc_conf.voltage_start = payload.readDouble32();
-  response.app_adc_conf.voltage_end = payload.readDouble32();
-  response.app_adc_conf.voltage_center = payload.readDouble32();
-  response.app_adc_conf.voltage2_start = payload.readDouble32();
-  response.app_adc_conf.voltage2_end = payload.readDouble32();
-  response.app_adc_conf.use_filter = payload.readInt8();
-  response.app_adc_conf.safe_start = payload.readInt8();
-  response.app_adc_conf.cc_button_inverted = payload.readInt8();
-  response.app_adc_conf.rev_button_inverted = payload.readInt8();
-  response.app_adc_conf.voltage_inverted = payload.readInt8();
-  response.app_adc_conf.voltage2_inverted = payload.readInt8();
-  response.app_adc_conf.throttle_exp = payload.readDouble32();
-  response.app_adc_conf.throttle_exp_brake = payload.readDouble32();
-  return Promise.resolve(response);
-}
 
 class VescMessageParser extends Subject {
   constructor() {
@@ -1867,7 +1754,7 @@ class VescMessageParser extends Subject {
           break;
 
         case PacketTypes.COMM_GET_APPCONF:
-          getAppConfiguration(buffer).then(result => this.pushResult(packetType, result));
+          this.pushResult(packetType, buffer);
           break;
 
         case PacketTypes.COMM_GET_VALUES:
@@ -1884,7 +1771,7 @@ class VescMessageParser extends Subject {
 
         default:
           logger.debug(`Unknown packet type "${message.type}"`);
-          getMotorConfiguration(buffer).then(result => this.pushResult(packetType, result));
+          this.pushResult(packetType, buffer);
       }
     });
   }

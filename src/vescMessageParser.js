@@ -8,7 +8,6 @@ import {
   getValuesSetupSelective,
   getDecodedPPM,
   getMotorConfiguration,
-  getAppConfiguration,
 } from './parsers'
 
 export default class VescMessageParser extends Subject {
@@ -31,7 +30,7 @@ export default class VescMessageParser extends Subject {
           break
 
         case PacketTypes.COMM_GET_APPCONF:
-          getAppConfiguration(buffer).then(result => this.pushResult(packetType, result))
+          this.pushResult(packetType, buffer)
           break
 
         case PacketTypes.COMM_GET_VALUES:
@@ -48,7 +47,7 @@ export default class VescMessageParser extends Subject {
 
         default:
           logger.debug(`Unknown packet type "${message.type}"`)
-          getMotorConfiguration(buffer).then(result => this.pushResult(packetType, result))
+          this.pushResult(packetType, buffer)
       }
     })
   }
