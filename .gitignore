@@ -69,7 +69,6 @@ build/*
 *.iml
 .idea
 
-.vscode
 .stryker-tmp/
 
 #Sonar scanner tmp
